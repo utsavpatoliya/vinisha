@@ -1,0 +1,38 @@
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal (shared across all list pages) -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirm Delete</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0" id="deleteModalMessage">Are you sure you want to delete this item? This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <form id="deleteModalForm" method="POST" action="">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i> Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global loading spinner overlay -->
+  <div id="loadingOverlay" class="loading-overlay d-none">
+    <div class="spinner-border text-light" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

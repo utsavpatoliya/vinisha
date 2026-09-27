@@ -1,0 +1,120 @@
+<%- include('../partials/header') %>
+
+  <% const isEdit=Boolean(order && order._id); %>
+
+    <div class="row justify-content-center mt-1">
+      <div class="col-12 col-lg-9">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <% if (error) { %>
+              <div class="alert alert-danger">
+                <%= error %>
+              </div>
+              <% } %>
+
+                <form id="orderForm" action="<%= isEdit ? '/orders/edit/' + order._id : '/orders/add' %>" method="POST">
+                  <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                      <label class="form-label">Customer</label>
+                      <div class="position-relative">
+                        <input type="text" class="form-control" id="customerName" name="customerName"
+                          placeholder="Type to search or add new customer"
+                          value="<%= isEdit ? order.customerName : (order && order.customerName ? order.customerName : '') %>"
+                          autocomplete="off" required />
+                        <input type="hidden" id="customerId" name="customerId"
+                          value="<%= isEdit ? order.customer : '' %>" />
+                        <div id="customerSuggestions" class="autocomplete-suggestions d-none"></div>
+                      </div>
+                      <div class="form-text">Select an existing customer or type a new name — it will be created
+                        automatically.</div>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                      <label for="orderDate" class="form-label">Order Date</label>
+                      <input type="date" class="form-control" id="orderDate" name="orderDate"
+                        value="<%= typeof today !== 'undefined' ? today : '' %>" required />
+                    </div>
+                  </div>
+
+                  <hr class="my-4" />
+
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h3 class="h6 fw-bold mb-0">Products</h3>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="addProductRow">
+                      <i class="bi bi-plus-lg me-1"></i> Add Product
+                    </button>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table align-middle" id="productRowsTable">
+                      <thead>
+                        <tr>
+                          <th style="min-width: 220px;">Product (English)</th>
+                          <th style="width: 120px;">Price</th>
+                          <th style="width: 140px;">Quantity</th>
+                          <th style="width: 50px;"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="productRowsBody">
+                        <!-- rows injected by JS; template below -->
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td class="text-end fw-bold">Grand Total:</td>
+                          <td colspan="2" class="fw-bold fs-5 text-primary" id="formGrandTotal">₹0.00</td>
+                          <td></td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+
+                  <template id="productRowTemplate">
+                    <tr class="product-row">
+                      <td class="position-relative">
+                        <input type="hidden" class="product-id" name="products[__INDEX__][productId]" value="" />
+                        <input type="hidden" class="product-gujarati" name="products[__INDEX__][nameGujarati]"
+                          value="" />
+                        <input type="text" class="form-control product-hinglish"
+                          name="products[__INDEX__][nameHinglish]" placeholder="e.g. product" autocomplete="off"
+                          required />
+                        <div class="autocomplete-suggestions product-suggestions d-none"></div>
+                      </td>
+                      <td>
+                        <input type="number" class="form-control product-price" name="products[__INDEX__][price]"
+                          min="0" step="0.01" placeholder="0.00" required />
+                      </td>
+                      <td>
+                        <input type="number" class="form-control product-quantity" name="products[__INDEX__][quantity]"
+                          min="0.01" step="0.01" placeholder="1" required />
+                      </td>
+                      <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-product-row">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
+
+                  <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                      <i class="bi bi-check-lg me-1"></i>
+                      <%= isEdit ? 'Save Changes' : 'Create Order' %>
+                    </button>
+                    <a href="/orders" class="btn btn-light">Cancel</a>
+                  </div>
+                </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pass existing order data (edit mode) and product master list to the client JS -->
+    <script>
+      window.VINISHA_REF_ORDER_FORM_DATA = {
+        isEdit: <% - isEdit ? 'true' : 'false' %>,
+        existingProducts: <% - isEdit ? JSON.stringify(order.products) : '[]' %>
+  };
+    </script>
+    <script src="/js/order-form.js"></script>
+
+    <%- include('../partials/footer') %>

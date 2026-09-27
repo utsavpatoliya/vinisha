@@ -1,0 +1,90 @@
+<%- include('../partials/header') %>
+
+<div class="row justify-content-center mt-1">
+  <div class="col-12 col-md-6 col-lg-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <% if (error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <form
+          action="<%= product && product._id ? '/products/edit/' + product._id : '/products/add' %>"
+          method="POST"
+        >
+          <div class="mb-3">
+            <label for="nameHinglish" class="form-label">Product Name (English)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nameHinglish"
+              name="nameHinglish"
+              value="<%= product ? product.nameHinglish : '' %>"
+              placeholder="e.g. product"
+              required
+              autofocus
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="mb-2">
+            <label for="nameGujarati" class="form-label d-flex justify-content-between">
+              <span>Product Name (Gujarati)</span>
+              <span class="text-muted small">auto-filled, editable</span>
+            </label>
+            <input
+              type="text"
+              class="form-control gujarati-text"
+              id="nameGujarati"
+              name="nameGujarati"
+              value="<%= product ? product.nameGujarati : '' %>"
+              placeholder="ટામેટા"
+            />
+          </div>
+          <p class="text-muted small mb-3">
+            <i class="bi bi-info-circle me-1"></i>
+            We auto-convert the English name into Gujarati as you type. Feel free to correct it manually if needed.
+          </p>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-fill">
+              <i class="bi bi-check-lg me-1"></i> <%= product && product._id ? 'Save Changes' : 'Add Product' %>
+            </button>
+            <a href="/products" class="btn btn-light">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const nameHinglish = document.getElementById('nameHinglish');
+    const nameGujarati = document.getElementById('nameGujarati');
+
+    if (nameHinglish && nameGujarati) {
+      let timer;
+      nameHinglish.addEventListener('input', () => {
+        clearTimeout(timer);
+        const query = nameHinglish.value.trim();
+        if (!query) {
+          nameGujarati.value = '';
+          return;
+        }
+        timer = setTimeout(async () => {
+          try {
+            const res = await fetch(`/api/products/transliterate?text=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            if (data.success && data.gujarati) {
+              nameGujarati.value = data.gujarati;
+            }
+          } catch (err) {
+            console.error('Transliteration failed', err);
+          }
+        }, 300);
+      });
+    }
+  });
+</script>
+
+<%- include('../partials/footer') %>

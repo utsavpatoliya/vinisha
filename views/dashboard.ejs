@@ -1,0 +1,153 @@
+<%- include('partials/header') %>
+
+<div class="row g-3 mt-1">
+  <div class="col-6 col-md-4 col-xl-3">
+    <a href="/customers" class="text-decoration-none">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-people-fill"></i></div>
+          <div>
+            <div class="stat-value"><%= stats.totalCustomers %></div>
+            <div class="stat-label">Total Customers</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-xl-3">
+    <a href="/products" class="text-decoration-none">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-success-subtle text-success"><i class="bi bi-box-seam-fill"></i></div>
+          <div>
+            <div class="stat-value"><%= stats.totalProducts %></div>
+            <div class="stat-label">Total Products</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-xl-3">
+    <a href="/orders" class="text-decoration-none">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-info-subtle text-info"><i class="bi bi-receipt"></i></div>
+          <div>
+            <div class="stat-value"><%= stats.totalOrders %></div>
+            <div class="stat-label">Total Orders</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-xl-3">
+    <a href="/orders/today" class="text-decoration-none">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-calendar-day-fill"></i></div>
+          <div>
+            <div class="stat-value"><%= stats.todayOrders %></div>
+            <div class="stat-label">Today's Orders</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-xl-3">
+    <a href="/orders" class="text-decoration-none">
+      <div class="card stat-card border-0 shadow-sm h-100">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-secondary-subtle text-secondary"><i class="bi bi-calendar3"></i></div>
+          <div>
+            <div class="stat-value"><%= stats.monthOrders %></div>
+            <div class="stat-label">This Month's Orders</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-6 col-md-4 col-xl-3">
+    <a href="/orders/add" class="text-decoration-none">
+      <div class="card stat-card border-0 shadow-sm h-100 bg-primary text-white">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon bg-white text-primary"><i class="bi bi-plus-lg"></i></div>
+          <div>
+            <div class="stat-value text-white">New</div>
+            <div class="stat-label text-white-50">Create Order</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-12 col-lg-7">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-0 pt-3 d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0 fw-bold">Latest 10 Orders</h2>
+        <a href="/orders" class="small text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="card-body pt-0">
+        <% if (latestOrders.length === 0) { %>
+          <p class="text-muted mb-0 py-3 text-center">No orders yet.</p>
+        <% } else { %>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Invoice #</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th class="text-end">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% latestOrders.forEach(order => { %>
+                <tr class="clickable-row" data-href="/orders/<%= order._id %>">
+                  <td class="fw-semibold"><%= order.invoiceNumber %></td>
+                  <td><%= order.customerName %></td>
+                  <td>₹<%= (order.totalAmount || 0).toFixed(2) %></td>
+                  <td class="text-end text-muted small"><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-0 pt-3 d-flex justify-content-between align-items-center">
+        <h2 class="h6 mb-0 fw-bold">Recently Added Customers</h2>
+        <a href="/customers" class="small text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="card-body pt-0">
+        <% if (recentCustomers.length === 0) { %>
+          <p class="text-muted mb-0 py-3 text-center">No customers yet.</p>
+        <% } else { %>
+        <ul class="list-group list-group-flush">
+          <% recentCustomers.forEach(c => { %>
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+              <a href="/customers/<%= c._id %>" class="text-decoration-none text-dark">
+                <i class="bi bi-person-circle me-2 text-muted"></i><%= c.name %>
+              </a>
+              <span class="text-muted small"><%= new Date(c.createdAt).toLocaleDateString() %></span>
+            </li>
+          <% }) %>
+        </ul>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

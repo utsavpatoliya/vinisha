@@ -1,0 +1,703 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
+const Customer = require('../models/Customer');
+
+// List 1 (Initial 168 customers)
+const list1 = [
+  { name: 'Nilesh Bhai Bagasra - Bagasra', city: 'Bagasra' },
+  { name: 'Bhavesh Bhai Bagasra - Bagasra', city: 'Bagasra' },
+  { name: 'Alpesh Bhai - Liliya', city: 'Liliya' },
+  { name: 'Manish Bhai - Chavand', city: 'Chavand' },
+  { name: 'Jignesh Bhai - Kukavav', city: 'Kukavav' },
+  { name: 'Ashok Bhai - Chavand', city: 'Chavand' },
+  { name: 'Sanjay Bhai - Babra', city: 'Babra' },
+  { name: 'Haresh Bhai - Amreli', city: 'Amreli' },
+  { name: 'Raju Bhai - Damnagar', city: 'Damnagar' },
+  { name: 'Vipul Bhai - Khambha', city: 'Khambha' },
+  { name: 'Dinesh Bhai - Vadiya', city: 'Vadiya' },
+  { name: 'Ghanshyam Bhai - Chavand', city: 'Chavand' },
+  { name: 'Kanti Bhai - Bagasra', city: 'Bagasra' },
+  { name: 'Hasmukh Bhai - Chavand', city: 'Chavand' },
+  { name: 'Paresh Bhai - Babra', city: 'Babra' },
+  { name: 'Ramesh Bhai - Babra', city: 'Babra' },
+  { name: 'Sunil Bhai - Liliya', city: 'Liliya' },
+  { name: 'Jagdish Bhai - Babra', city: 'Babra' },
+  { name: 'Chetan Bhai - Babra', city: 'Babra' },
+  { name: 'Ravi Bhai - Gondal', city: 'Gondal' },
+  { name: 'Janak Bhai - Babra', city: 'Babra' },
+  { name: 'Ashish Bhai - Babra', city: 'Babra' },
+  { name: 'Kanji Bhai - Babra', city: 'Babra' },
+  { name: 'Nitin Bhai - Babra', city: 'Babra' },
+  { name: 'Prakash Bhai - Babra', city: 'Babra' },
+  { name: 'Pravin Bhai - Babra', city: 'Babra' },
+  { name: 'Dhiru Bhai - Jetpur', city: 'Jetpur' },
+  { name: 'Mansukh Bhai - Babra', city: 'Babra' },
+  { name: 'Kishore Bhai - Babra', city: 'Babra' },
+  { name: 'Dharmendra Bhai - Babra', city: 'Babra' },
+  { name: 'Harshad Bhai - Babra', city: 'Babra' },
+  { name: 'Bharat Bhai - Babra', city: 'Babra' },
+  { name: 'Vinod Bhai - Babra', city: 'Babra' },
+  { name: 'Jitendra Bhai - Babra', city: 'Babra' },
+  { name: 'Mukesh Bhai - Gondal', city: 'Gondal' },
+  { name: 'Pankaj Bhai - Babra', city: 'Babra' },
+  { name: 'Sameer Bhai - Babra', city: 'Babra' },
+  { name: 'Alpesh Bhai Lathi - Lathi', city: 'Lathi' },
+  { name: 'Amit Bhai - Babra', city: 'Babra' },
+  { name: 'Kiran Bhai - Babra', city: 'Babra' },
+  { name: 'Ramesh Bhai Mendarda - Mendarda', city: 'Mendarda' },
+  { name: 'Hiren Bhai - Babra', city: 'Babra' },
+  { name: 'Shailesh Bhai - Babra', city: 'Babra' },
+  { name: 'Vijay Bhai - Amreli', city: 'Amreli' },
+  { name: 'Chetan Bhai Dairy - Babra', city: 'Babra' },
+  { name: 'Jayanti Bhai - Babra', city: 'Babra' },
+  { name: 'Dhiren Bhai - Babra', city: 'Babra' },
+  { name: 'Dilip Bhai - Babra', city: 'Babra' },
+  { name: 'Ashwin Bhai - Rajula', city: 'Rajula' },
+  { name: 'Pankaj Bhai - Bhavnagar', city: 'Bhavnagar' },
+  { name: 'Hitesh Bhai - Jafarabad', city: 'Jafarabad' },
+  { name: 'Bhupat Bhai - Rajkot', city: 'Rajkot' },
+  { name: 'Naresh Bhai - Manavadar', city: 'Manavadar' },
+  { name: 'Vijay Bhai - Junagadh', city: 'Junagadh' },
+  { name: 'Rajendra Bhai - Jamnagar', city: 'Jamnagar' },
+  { name: 'Sanjay Bhai - Morbi', city: 'Morbi' },
+  { name: 'Bharat Bhai - Porbandar', city: 'Porbandar' },
+  { name: 'Shailesh Bhai - Wadhwan', city: 'Wadhwan' },
+  { name: 'Mahendra Bhai - Surendranagar', city: 'Surendranagar' },
+  { name: 'Deepak Bhai - Botad', city: 'Botad' },
+  { name: 'Kaushik Bhai - Gadhada', city: 'Gadhada' },
+  { name: 'Tushar Bhai - Bardoli', city: 'Bardoli' },
+  { name: 'Hardik Bhai - Ankleshwar', city: 'Ankleshwar' },
+  { name: 'Yogesh Bhai - Navsari', city: 'Navsari' },
+  { name: 'Vishal Bhai - Valsad', city: 'Valsad' },
+  { name: 'Nirant Bhai - Bharuch', city: 'Bharuch' },
+  { name: 'Paresh Bhai - Anand', city: 'Anand' },
+  { name: 'Darshan Bhai - Nadiyad', city: 'Nadiyad' },
+  { name: 'Suresh Bhai Dairy - Babra', city: 'Babra' },
+  { name: 'Ashok Bhai Farm - Babra', city: 'Babra' },
+  { name: 'Raju Bhai Hotel - Chavand', city: 'Chavand' },
+  { name: 'Mahesh Bhai Store - Babra', city: 'Babra' },
+  { name: 'Vijay Bhai Fruit - Amreli', city: 'Amreli' },
+  { name: 'Babu Bhai - Babra', city: 'Babra' },
+  { name: 'Ramesh Bhai Paan - Babra', city: 'Babra' },
+  { name: 'Sanjay Bhai Provision - Babra', city: 'Babra' },
+  { name: 'Manish Bhai Electric - Bhavnagar', city: 'Bhavnagar' },
+  { name: 'Haresh Bhai Agency - Babra', city: 'Babra' },
+  { name: 'Jayesh Bhai - Babra', city: 'Babra' },
+  { name: 'Kanji Bhai Dairy - Babra', city: 'Babra' },
+  { name: 'Kamlesh Bhai - Gondal', city: 'Gondal' },
+  { name: 'Chetan Bhai Auto - Babra', city: 'Babra' },
+  { name: 'Bhavin Bhai - Babra', city: 'Babra' },
+  { name: 'Mayur Bhai - Amreli', city: 'Amreli' },
+  { name: 'Darshan Bhai - Rajkot', city: 'Rajkot' },
+  { name: 'Nilesh Bhai Tailor - Babra', city: 'Babra' },
+  { name: 'Jitu Bhai - Chavand', city: 'Chavand' },
+  { name: 'Haresh Bhai Bakery - Babra', city: 'Babra' },
+  { name: 'Kishore Bhai Dairy - Bagasra', city: 'Bagasra' },
+  { name: 'Ghanshyam Bhai Patel - Bagasra', city: 'Bagasra' },
+  { name: 'Vallabh Bhai - Babra', city: 'Babra' },
+  { name: 'Dhiru Bhai Agro - Jetpur', city: 'Jetpur' },
+  { name: 'Pravin Bhai Market - Babra', city: 'Babra' },
+  { name: 'Hitesh Bhai Provision - Babra', city: 'Babra' },
+  { name: 'Vipul Bhai Auto - Babra', city: 'Babra' },
+  { name: 'Jagdish Bhai Farm - Babra', city: 'Babra' },
+  { name: 'Mansukh Bhai Dairy - Liliya', city: 'Liliya' },
+  { name: 'Bharat Bhai Saree - Babra', city: 'Babra' },
+  { name: 'Mukesh Bhai Motors - Gondal', city: 'Gondal' },
+  { name: 'Bhavesh Bhai Medical - Babra', city: 'Babra' },
+  { name: 'Ashish Bhai Bakery - Babra', city: 'Babra' },
+  { name: 'Amit Bhai Electronics - Babra', city: 'Babra' },
+  { name: 'Pankaj Bhai Hardware - Babra', city: 'Babra' },
+  { name: 'Sameer Bhai Mobile - Babra', city: 'Babra' },
+  { name: 'Shailesh Bhai Cutlery - Babra', city: 'Babra' },
+  { name: 'Hiren Bhai Jewellers - Babra', city: 'Babra' },
+  { name: 'Nitin Bhai Provision - Babra', city: 'Babra' },
+  { name: 'Ramesh Bhai Garment - Babra', city: 'Babra' },
+  { name: 'Hasmukh Bhai Agro - Chavand', city: 'Chavand' },
+  { name: 'Alpesh Bhai Traders - Lathi', city: 'Lathi' },
+  { name: 'Janak Bhai Dairy - Babra', city: 'Babra' },
+  { name: 'Paresh Bhai Auto - Babra', city: 'Babra' },
+  { name: 'Kalpesh Bhai Bakery - Babra', city: 'Babra' },
+  { name: 'Ravi Bhai Marketing - Babra', city: 'Babra' },
+  { name: 'Prakash Bhai General - Babra', city: 'Babra' },
+  { name: 'Dinesh Bhai Cutlery - Babra', city: 'Babra' },
+  { name: 'Kanti Bhai Hotel - Babra', city: 'Babra' },
+  { name: 'Harshad Bhai Provision - Babra', city: 'Babra' },
+  { name: 'Vinod Bhai Fabrication - Babra', city: 'Babra' },
+  { name: 'Jitendra Bhai Stationery - Babra', city: 'Babra' },
+  { name: 'Dhiren Bhai Mobile - Babra', city: 'Babra' },
+  { name: 'Dilip Bhai Sweets - Babra', city: 'Babra' },
+  { name: 'Chetan Bhai Tea - Babra', city: 'Babra' },
+  { name: 'Jayanti Bhai Fruit - Babra', city: 'Babra' },
+  { name: 'Dharmendra Bhai Agency - Babra', city: 'Babra' },
+  { name: 'Kiran Bhai Medical - Babra', city: 'Babra' },
+  { name: 'Sunil Bhai Hardware - Babra', city: 'Babra' },
+  { name: 'Vijay Bhai Dairy - Amreli', city: 'Amreli' },
+  { name: 'Bavchand Bhai - Babra', city: 'Babra' },
+  { name: 'Lalji Bhai - Babra', city: 'Babra' },
+  { name: 'Chhagan Bhai - Rajkot', city: 'Rajkot' },
+  { name: 'Magan Bhai - Junagadh', city: 'Junagadh' },
+  { name: 'Nanji Bhai - Jamnagar', city: 'Jamnagar' },
+  { name: 'Govind Bhai - Bhavnagar', city: 'Bhavnagar' },
+  { name: 'Jenti Bhai - Babra', city: 'Babra' },
+  { name: 'Ravji Bhai - Amreli', city: 'Amreli' },
+  { name: 'Popat Bhai - Babra', city: 'Babra' },
+  { name: 'Bhikha Bhai - Bagasra', city: 'Bagasra' },
+  { name: 'Babu Bhai Patel - Babra', city: 'Babra' },
+  { name: 'Raghav Bhai - Chavand', city: 'Chavand' },
+  { name: 'Harji Bhai - Liliya', city: 'Liliya' },
+  { name: 'Nathu Bhai - Khambha', city: 'Khambha' },
+  { name: 'Devji Bhai - Damnagar', city: 'Damnagar' },
+  { name: 'Kanji Bhai Patel - Babra', city: 'Babra' },
+  { name: 'Samji Bhai - Babra', city: 'Babra' },
+  { name: 'Trambak Bhai - Babra', city: 'Babra' },
+  { name: 'Gopal Bhai - Gondal', city: 'Gondal' },
+  { name: 'Ramji Bhai - Jetpur', city: 'Jetpur' },
+  { name: 'Shambhu Bhai - Babra', city: 'Babra' },
+  { name: 'Chandu Bhai - Babra', city: 'Babra' },
+  { name: 'Madhavji Bhai - Babra', city: 'Babra' },
+  { name: 'Dayalji Bhai - Babra', city: 'Babra' },
+  { name: 'Mulji Bhai - Babra', city: 'Babra' },
+  { name: 'Hira Bhai - Babra', city: 'Babra' },
+  { name: 'Premji Bhai - Babra', city: 'Babra' },
+  { name: 'Ranchhod Bhai - Babra', city: 'Babra' },
+  { name: 'Velji Bhai - Babra', city: 'Babra' },
+  { name: 'Karshan Bhai - Babra', city: 'Babra' },
+  { name: 'Virji Bhai - Babra', city: 'Babra' },
+  { name: 'Jiva Bhai - Babra', city: 'Babra' },
+  { name: 'Bhanji Bhai - Babra', city: 'Babra' },
+  { name: 'Mohan Bhai - Babra', city: 'Babra' },
+  { name: 'Keshavji Bhai - Babra', city: 'Babra' },
+  { name: 'Damji Bhai - Babra', city: 'Babra' },
+  { name: 'Bhavan Bhai - Babra', city: 'Babra' },
+  { name: 'Narsinh Bhai - Babra', city: 'Babra' },
+  { name: 'Ganesh Bhai - Babra', city: 'Babra' },
+  { name: 'Shivji Bhai - Babra', city: 'Babra' }
+];
+
+// List 2 (454 account entries)
+const rawList2 = `Account Name	City Name
+A K Spares & Cooling	Kachchh
+A ONE SURAT	SURAT
+A TO Z Ref	Jambusar
+A-Flash Plast Ahemdabad	AHMEDABAD
+A-One Vapi	VAPI
+AASHIQUE REFRIGERATION-DHULIA	DHULIA
+ABC COMPANY COOLCARE	DELHI
+Accurate Enterprise	SURAT
+ACME REFRIGRATION-SURAT	
+Adinath Enterprises-ADN	Kolkata
+ADITYA REFRIGERATION-DELHI	DELHI
+AERCO SPARE - ADAJAN	SURAT
+Aerochem Laboratories	BHARUCH
+Air Cool India	MUMBAI
+AIRCON INDIA - Delhi	DELHI
+AIRCON REFRIGERRATION & ELECTRONICS	TIRUPPUR
+Ajit Industries Pvt. Ltd.	..
+AKBAR HOLIDAY	..
+Akshar Home & Life Solutions	Gandhinagar
+ALANG EXPENSE	
+ALPHA REFRIGERATION	BHAVNAGAR
+ALPINE ENTERPRISE	SURAT
+AMAN REFRIGERATION(BHUSAWAL)	
+AMBIKA ENTERPRISE-RAJKOT	RAJKOT
+AMMAR REFRIGERATION GODHRA	
+AMMAR REFRIGERATION NANDURBAR	
+ANAI REFRIGERATION	DHULIA
+ANAND FREEZER SERVICE	UNJA
+ANGARA METALS & TUBES	AHMEDABAD
+Angel Cooling	..
+APNA FREEZ	NAVSARI
+APNASPARE.COM-KENIL	
+AR REF.NANDED	..
+ARIHANT REFRIGERATION	RAIPUR
+ARROW ELECTRIC CORPORATION	..
+ARROW REFRIGRATION-PATAN	PATAN
+ARYAN ENTERPRISE (Shreenathji)	SURAT
+ASHA ENTERPRISE	AHMEDABAD
+Aster Corporation	..
+Atharv Enterprise	VALSAD
+AUM ELECTRICALS	VADODRA
+AVINASH FREEZE SALES	VISNAGAR
+BaBa Enterprise	..
+BABA REFRIGERATION	SURAT
+BABOSA AIRCON	NEW DELHI
+BAFNA INDUSTRIES	UMBERGAON
+BAJRANG ENTERPRISE	SURAT
+Balaji Air Care Adajan	SURAT
+Balaji Electronics	AHMEDABAD
+Balaji Refrigeration Service-KATARGAM	SURAT
+Bank Of Baroda Loan Acc-Rajnibhai	SURAT
+BANSAL	
+BANSHI AIRCONDIION	RAJKOT
+BANSI REFRIGERATION	RAJKOT
+BHAGAT REFREGIRATION BHUJ	
+BHAGYALAXMI AC PARTS DHORAJI	DHORAJI
+BHARAT AC	CHIKHALI
+BHARAT ELECTRIC-SURAT	SURAT
+BHARAT REFRIGERATION-JUNAGHADH	JUNAGADH
+BHARAT REFRIGERATION-VERAVAL	..
+BHARGAV REFRIGERATION	MODASA
+BHAVESHBHAI(MOTA VARACHA)-8238288388	SURAT
+BHAVSAR REF	DHULIA
+Bhumi Refrigeration	VALSAD
+BHUMIT BALADHA	SURAT
+BLUE STAR LIMITED	
+BOBBYBHAI DELHI	
+BRAHMANI ENTERPRISE-SURAT	SURAT
+BRAHMANI REFRIGERATION PARTS-BHESAN	..
+Bright Enterprise	SURAT
+BURHANI REFRIGERATION-BOTAD	BOTAD
+CAPRI ENTERPRISE	DELHI
+CAPRI ENTERPRISE-SURAT	SURAT
+Carrier Air	..
+Carrier Airconditioning And Refrigeration Ltd	AHMEDABAD
+CHAUDHARI REFRIGERATION	VYARA
+CHAUDHARI SHIRPUR MAHARASTRA	DHULIA
+CHEMRON COOLING	MORBI
+CHEMVIKAS ENGINEERING PVT LTD	HARYANA
+CLAASIK REFRIGERATION-VANSDA	
+CLASSIC ELECTRONIC	AURANGABAD
+CMD REFRIGERATION-PORBANDAR	PORBANDAR
+COLDSTOR ENTERPRISES	Nashik
+Comfort Cooling System	SURAT	
+COOL INDIA - VAPI	
+Cool Plus Refrigeration	SURAT
+Cool Spa Air Conditioner	GANDHIDHAM
+COOLGENIC SOLUTIONS	AHMEDABAD
+COOLING ENTERPRISE-DIPANSU GUPTA	UNJA
+Courier Charges	
+Creative Cooling Technology	Vadodara
+D.K. ENTERPRISE-LED UNIVERSAL IMUNATION	Kolkata
+DAINAMIK METAL BOMBAY	
+DAKSH REFRIGERATION ANJAR	KUTCH
+DEEPIKA PLASTIC -ASHISH TOMAR	DELHI
+DELHI	DELHI
+DELHI SPARE HUB DIPAK HIRAVAT-BTL	HIMMATNAGAR
+Deposite Himson	
+DEVA REF-SAMBHAJINAGAR	MAHARASHTRA
+DEVANSH ENTERPRISES	JALGAON	
+DEVENBHAI UPAD	SURAT	
+DHERUBHAI SAVALIYA	HIMMATNAGAR
+Dipenbhai Salary	
+DIPU VIHOT REFRIGERATION	SURAT	
+Dohrik Incorporation	Faridabad
+DS ELECTRONICS	KIM
+DVM	DELHI
+Dwarkadhish Refrigeration And Air Condition	JAMNAGAR
+Elite Electrical And Refrigeration	AURANGABAD
+EZY SPARE -SIDHDHPUR	..
+Famous Electricals	JAMNAGAR
+Fedral Refrigration	..
+G M REFRIGERATION (GAUTAM ENTER.)	VADODRA
+GAIKWAD REFRIGERATION-BARODA	VADODRA
+GAJANAN REFRIGERATION	KADI
+GAJANAN REFRIGERATION-KALOL	
+GALAXY INTERNATIONAL	
+GANAPATI FRIDGE - ADAJAN	SURAT
+GANAPATI REFRIGERATION-UDHANA	SURAT
+GANESH REFIGERATION HALVAD	MORBI	
+GAYATRI REFRIGERATION BHAVNAGER	BHAVNAGAR
+GAYATRI-DIVIJBHAI	SURAT
+GEMINI REFRIGERATION	VAPI
+GENIUS SANJAYBHAI UMARGAM	
+GENUINE REFRIGERATION	GONDAL
+GHANSHYAMBHAI SALARY EXP	
+GLOBAL REFRIGERATION-ASHWINBHAI	
+GODREJ AND BOYCE MFG CO LTD AHMEDABAD	SURAT
+GODREJ AND BOYCE MFG CO LTD MUMBAI	
+GOODWILL HARDIK	SURAT
+GOODWILL-P	SURAT	
+GOPI COOLING SYSTEM	SURAT
+GOPINATH STEEL TRADERS	
+GP ENTERPRISE-JAMNAGAR	..
+GREEN AGENCY		
+GUJARAT AIR CON	SURAT
+HAIER APPLIANCES INDIA PVT.LTD.	AHMEDABAD
+HAPPY ENTERPRISE	SURAT
+Happy Life Spares Delhi	..
+HARI REFRIGERATION	Upleta
+HARI REFRIGERATION DIISA		
+HC REFRIGERATION	ANAND
+HCH BEARRING	RAJKOT
+HDJ	SURAT
+Hdj Capital	..
+HEER REFRIGERATION	SURAT
+HEXA COOL PROCESS	AHMEDABAD
+HI TECH LASER AND SENSOR	SURAT
+HIMALAY REF.- Bhaveshbhai	SURAT
+HIMALAYA AC-MILANBHAI TAKO	SURAT
+HIMALAYA CHIRAG	SURAT
+HIMALAYA PANKAJBHAI-SALES	SURAT
+HIMANSHU PCB DELHI	
+HIND REFRIGERATION SURAT	SURAT
+Hind Refrigration Kosamba	..	
+Hiren Textiles	SURAT
+HMB ENTERPRISE	HIMMATNAGAR
+Honest Electricals/Refrigeration	DHARAMPUR
+HUM BELT	DELHI
+ICICI BANK	SURAT
+IFB LIQUED	ANAND	
+J A B SALES	
+J K PARAS (DELHI)	
+J&L AIRCON- Telangana	TELANGANA
+J&L Aircon-Delhi	
+J.P TRADING CO.	NEW DELHI
+JACOB GEARBOX MUMBIA	
+Janta Machine Tools	AHMEDABAD
+JATIN DHOLA	
+JATINBHAI DHOLA OCHI NA	HIMMATNAGAR
+JAY AMBE REFRIGERATION (AMBIKA)	
+JAY AMBE REFRIGERATION-SAVARKUNDLA	SAVARKUNDLA
+JAY AMBE(HAIER)	MAHARASHTRA
+JAY BAHUCHAR MORBI	
+JAY BHAGAVATI	SURAT
+JAY HARSIDDHI REFRIGERATION	TALALA
+Jay Odhavram Refrigeration	GANDHIDHAM
+JAY SAI SERVICE	BHARUCH
+JAYANT BACHKANIWALA	..
+Jayant-Bachkani Diposit	..
+JAYESHBHAI AUTO	SURAT	
+JAYSUKBHAI SAVALIYA	HIMMATNAGAR
+JIGABHAI	SURAT
+Jiya Refrigeration	SURAT
+JK REFRIGERATION	SURAT
+JM COOLING	
+JR APLLENCES RISH BHAI MUMBAI	
+JUPITER REFRIGERATION	AHMEDABAD
+JVR-DELHI-MOHIT	DELHI
+JYOTI REFRIGEARATION	JETPUR
+K E - KHODAL-SURAT	..
+KA TRADING CO./M.K TRADING/MAHENDAR	DELHI
+KANAK REFRIGERATION	NAVSARI
+KARMA ENTERPRISE SALES	MUMBAI
+KARTIK AIRCONDITION	SURAT
+KARTIK TRADERS	..
+Kaynaat Cooling System	SURAT
+KENIL SALARY EXPENSS	
+KESHARI ENT-BOX	..
+KGN ELECTRICS BHARUCH	BHARUCH
+KHATRI REFRIGERATION	WAGHODIA
+KIRTI ENTERPRISE	DIYODAR
+Kirti Maru	MUMBAI	
+KRISHNA ENTERPRISE DHIRAJBHI	SURAT
+KRISHNA KRUPA BRASS	
+KRISHNA REFRIGERATION- SURENDRANAGAR	SURAT
+Krishna Refrigeration-Kesod	..
+KRUSHI VIKAS BHANDAR	SURAT
+KUNJ REFRIGERATION	GODHRA	
+LABH REFRIGRATION-PATAN	PATAN
+LABOUR EXP.	
+LAKHANI TRADERS	SURAT
+LALITA INTERNATIONAL	VAPI
+LAXMI COOLING KUTCH	KUTCH
+LG ELECTRONICS INDIA PVT LTD	SURAT	
+LP SALES -ADARSH	DELHI
+LUCKY REFRIGERATION -UMRETH	..
+LUCKY REFRIGERATION BILIMORA	BILIMORA
+LUCKY REFRIGERATION(ANAND)	ANAND
+LUXURY REFRIGERATION BANASKANTHA:-01/10/2023	
+M Cool Refrigeration	AHMEDABAD
+M R TRADING RAJA DELHI	DELHI
+M Tech	SURAT
+M.R REFRIGERATION	SURAT	
+MANNAT REFRIGERATION	MALEGOAN
+MANSHUKHBHAI PATOLIYA	..
+MARUTI JARI-SURAT	SURAT
+MARUTI REFRIGERATION	KUTCH
+Maruti Sales Service-KAMREJ	
+MATARIYA CAPACITORS	..
+MAYRA INDUSTRIES	AHMEDABAD
+MECH FLUID SYSTEMS	
+METAL TECH SUSIL JAIN (MUMBAI)	MUMBAI
+MIYANI BROTHER	
+MK TRADING MAHENDRABHAI	SURAT
+MOHAMMADI REFRIGERATION	DAHOD
+MONU ELECTRONICS	LUCKNOW
+MS ENGINEERING	
+Mudit Refrigeration	SURAT
+MURLIDHR REFRIGERATION-VISAVADAR	VISAVADAR
+Muskan Eloctronic Udhna	SURAT
+MUSKAN REFRIGERATION KUTCH	KUTCH
+NAAZ REFRIGERATION	ANAND
+NAHATA ENTERPRISES	
+Naklangi Packaging Industries	SURAT
+NANAK REFRIGERATION-SVS	UNJA
+NATIONAL REFRIGERATION (Bharuch)	BHARUCH
+NATIONAL REFRIGERATION (NAVRATANBHAI)	..
+NATIONAL REFRIGERATION RAJKOT	RAJKOT
+NATIONAL REFRIGERATION SALES&SERVICES(KARANJA)	MAHARASHTRA
+NAULAKHA INDUSTRIAL CORPORATION	SECUNDERABAD
+NAVKAR REFRIGERATION	ANKLESHWAR
+Near Stop	SURAT
+Nemco Ref-Ringroad	..
+NEMCO REFRIGRATION - UDHANA	
+NENCY-BHAVNAGAR	BHAVNAGAR
+NEW BAJRANG MORBI	MORBI
+NEW CHUDASAMA RAJULA	
+NEW CLASSIC REFRIGERATION-Himmantnagar	HIMMATNAGAR
+NEW GAYATRI Refrigeartion-IDAR	..
+NEW NATIONAL - ANKLESHWAR		
+NEW STAR (VADODRA)	
+NEW VENUS-CHIRAG BHAI	SURAT
+Nice Rerigerators And Air Condistioners	Panchmahals
+NIKKI REFRIGERATION	AHMEDABAD	
+NILKANTH AIRCON (Cold Wave)	SURAT	
+Om Motor	
+OM SAI ENTERPRISES		
+OZONE AIR SOLUTION LIMITED	AHMEDABAD
+PACIFIC REFRIGEARTION EON	VADODRA
+PACKING & FORWADING EXP.	
+PANKAJBHAI JETPUR RAJNIBHAI	HIMMATNAGAR	
+PARTH REFRIGERATTION-ASWINBHAI	JUNAGADH
+PATEL (MINI BAZAAR)	SURAT
+PATEL REFRIGERATION -AMROLI	SURAT
+PATEL REFRIGERATION-GONDAL	GONDAL
+PATEL SALES (KATARGAM)	SURAT
+PATOLIYA MAHENDRABHAI	..
+PAYAL REF	NANDURBAR
+PCB HOUSE	SURAT
+Penalty Expense A/c.(Default)	
+PERFECT SALES-KAMREJ	SURAT
+PERFECT TRADERS AHEMDABAD	AHMEDABAD	
+POLYLUX CABLE GOPALBHAI	
+PRAFULLBHAI OCHINA LOAN	HIMMATNAGAR
+PRAKASH GARDEN TOOLS	SURAT
+PRAKASH REFRIGERATION BHUJJ		
+R D Engineers	Kolhapur
+Rachana Global	SURAT
+RADHE REFRIGERATION	KODINAR
+RADHE REFRIGERATION-SURAT	
+RADHEY RADHEY PACKING	HIMMATNAGAR
+RADHIKA-JETPUR	JETPUR
+RAJ ELECTRIC(MORBI)	
+RAJAL REF (Balaji Cooling)	MORBI
+RAJKOT BERING	..	
+RAJVI COOL LINE	VALSAD
+RAMDEV CREATION (Balvant Polra)	SURAT
+RAMESHBHAI Upad	
+RANKO REFRIGERATION	DELHI
+RASIKBHAI VALANI	
+RATANDEEP MUBARAKBHAI-DESCAL	AHMEDABAD
+RAVAL SERVICE CENTER	AHMEDABAD
+Ravi Bombay	MUMBAI
+RECENT SPARE CENTER-SHAHADA	SHAHADA
+Redherring Plast India Private Limited	DELHI
+RELIANCE REF - SURAT	SURAT	
+REYAZ BAG HOUSE	DELHI
+RISHABH ENTERPRISES HAVC&R PVT LTD	CHENNAI
+Rock Well Industres Limited	RAJKOT
+ROHIT ENTERPRISE	MUMBAI
+RONAK REFRIGERATION	HIMMATNAGAR
+ROYAL RERIGERATION-DAMAN	DAMAN
+RR REFRIGERATION	SURAT
+RR-BALASINOR	..
+RUDRA MARKETING	AHMEDABAD
+RUDRA REFRIGERATION-BHACHAU	
+RUTVIK	SURAT	
+S R REF-GANDHIDHAM	GANDHIDHAM
+Safe Refrigerations (p) Limited	Mumbai Suburban
+SAGAR REFRIGERATION-JUNAGHADH	JUNAGADH
+SAGARBHAI VIHOT ENTERPRISE	SURAT
+SAHARA REFRIGERATION	GODHRA
+Sahjanand Refrigeration	SURAT
+SAHYOG REFRIGERATION	JAMNAGAR
+SAIFEE REF. SAVARKUNDALA	..	
+SAMRTH REFRIGERATION	AHMEDABAD
+SANCHIYAN JKB	
+SANDIP VIHOT REFRIGERATION	
+SANJAR SALES	RAJPIPLA
+SANJAY DAVRA	SURAT
+SANJAY ENTERPRISE	HIMMATNAGAR
+SANJAYBHAI UMARGAM NEW	..
+SANKET REFRIGERATION	AMALNER
+Sara Refrigeration & Cooling System-Aurangabad	Chhatrapati Sambhaji Naga
+SARANG REFRIGERATION RAJKOT	RAJKOT
+SATNAM SPARES	JALGAON
+SATYAM ENTERPRISE	SURAT
+SAVAN REFRIGERATION	
+SD REFRIGERATION AURANGABAD	AURANGABAD
+Sekhani Brother	
+Seloth Ref. Talaja	
+SHAKTI ENTERPRISE	..
+Shakti Enterprises-Aurabgabad	AURANGABAD
+SHAN REFRIGERATION ANAND	ANAND
+SHANTI AIR CONDITION	SURAT
+SHANTI FREEZE	SURAT
+SHANTI REFRIGERATION & CO.	VADODRA
+SHANTI SALES	SURAT
+SHANTI TRADERS	VAPI
+SHAYONA HASTAK	
+SHEETAL REFRIGERATION BARDOLI	..
+Shiv Entrprice	
+Shiv Industries	Mumbai Suburban
+SHIV REF SHIVAM	BHAVNAGAR
+Shiv Refrigeration- Bilimora	BILIMORA
+SHIVAM ENTERPRISE-CHILLER	..
+Shradhdha Ac Service	..
+SHREE BALAJI ENTERPRICE	..
+SHREE BALAJI REFRIGERATION-RAIBARELI	
+SHREE GANESH REFRIGERATION	JAMNAGAR
+SHREE GANESH SALES AND SERVICE -SHAPAR	RAJKOT
+Shree Hari Enterprise	SURAT
+SHREE KANCHAN REF(Ringroad) Surat Dilip Gandhi	..
+Shree Nath Refrigeration	RAJKOT
+SHREE NATRAJ REFRIGERATION	ANAND
+SHREE NILKANTH-HARSHAL BHAI	..
+Shree Ram Electronics	AHMEDABAD
+SHREE RAM REFRIGERATION CO.	MAHESANA
+SHREE RAMA AIR CON	
+SHREE RANG-HALOL	Halol
+SHREE REFRIGERATION -SURAT SRARWING	..
+SHREE SAI REFRIGERATION	CHALISGAON
+SHREE SHAKTI REFRIGERATION	ANAND
+SHREE SHYAM REFRIGERATION CO.	
+SHREE SPARE REFRIGERATION	JALGAON
+Shree Verai Deesa	..
+Shreeji Creation	SURAT
+SHREEJI ELECTRONICS PARTS-JASDAN	JASDAN
+SHREEJI PLAST	..
+SHREEJI REFRIGERATION- JAMKAMABLIYA	DWARKA
+SHREEJI REFRIGERATION-JAMNAGAR	JAMNAGAR
+SKY COOLING	SURAT
+SMOG ANKLESHWAR	
+SONA HARD WARE	VALSAD
+SONU REF.	..
+SONY TRADERS	Nashik
+SPLIT VALVE NIKUNJBHAI	JAMNAGAR
+SR REFRIGERATION RAJKOT	RAJKOT
+SR SERVICES-GODADARA	..
+SRI IMPEX-RUTVIK	
+SSD AND CO	AHMEDABAD
+SSD ELACTR-JALGAON	JALGAON
+Stand Delhi Narula	..
+STAR WIN	SURAT	
+SUKOON REFRIGERATION	DAMAN
+Super Aircondition	AHMEDABAD
+SUPER REFRIGERATION-NANDURBAR	NANDURBAR
+SUPREME FLEXITUBE	..
+SURAT ENTERPRISE	
+SURAT ENTERPRISE(NANA VARACHA)	..
+SURGE TECHNO SOLUTION	RAJKOT	
+SWATIK REFRIGERATION	
+SYMBOL REFAIR NETWORK LLP	..
+Symphony Solution Pcb -Rajkot	RAJKOT
+T.A REFRIGERATION	BHARUCH
+TEKTON ENTERPRISE (2s Kadi)	KADI
+THE BRAKKERS	
+TIRTH BRASS INDUSTRIES-KETANBHAI	
+TIRTHRAJ REFRIGERATION-GODHARA	GODHRA
+TIRUPATI TRADERS	HIMMATNAGAR
+Tomar Delhi	
+TULSI REFRIGRATION	SURAT
+UMA COMPUTER	..
+UMIYA REFRIGERATION VISNAGAR	VISNAGAR
+UNIQE NEW	..
+Uniqe-G	..
+UNIQUE AIRCONDITIONER AND REF.	Silvassa
+Universal Airconditioner(Mahua)	MAHUVA
+US HVAC&WELD TOOLS	..
+V/c 25/30 New	..
+Vaishnavi Enterprise	AURANGABAD
+VARDHAMAN ELECTRONICS	MUMBAI
+VARDHAN ENTERPRISES	SURAT
+VARSHIL JAYESH DOSHI	HIMMATNAGAR
+VASU REFRIGERATION	KODINAR
+Vatav & Kasar A/c.	
+VATSAL ENTERPRIS COOL INTRNATIONAL-PIYUSH	
+VC	HIMMATNAGAR
+VC 15/20	..
+VC 25/30	
+VEENA REF	
+Vidhata Enterprise	Silvassa
+VIHAAN AIRCON-BHAVESHBHAI	SURAT
+VIKASH ENTERPRISES	..
+VIKASH REFRIGERATION	PURASAWALKKAM
+VIRAT REFRIGERATION AMRELI	
+Vishwakarma REFRIGERATION	PORBANDAR
+Vizical Colling-(GOPI COOLING)	
+VRUNDA CAM	
+WHIRLPOOL OF INDIA LTD.	AHMEDABAD
+WONDERWASH INDIA	MUMBAI
+Woodsy Exims	Gandhinagar
+XYZ-	SURAT
+YAMUNA REFRIGERATION	SURAT
+YASH REFRIGERATION BARDOLI	BARDOLI
+YASHBHAI SACHIN (JEMISH RADADIYA)	SURAT
+YASHRAJVI Enterprise	VALSAD
+Yatri Cooling	
+YOGESH CHAVDA SALARY	..
+YOGESHWAR-BARDOLI	
+Zamzam Ref-Bodeli	Bodeli
+ZED PLUS KHANBHAI	
+Zenith Spray & Aerosols Private Limited-Wesafe	Jhajjar`;
+
+async function seedAll() {
+  try {
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      console.error('MONGODB_URI not set');
+      process.exit(1);
+    }
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(uri);
+    console.log('Connected.');
+
+    const map = new Map();
+
+    // Process list 1
+    for (const c of list1) {
+      if (c.name) {
+        map.set(c.name.trim(), { name: c.name.trim(), city: c.city ? c.city.trim() : '' });
+      }
+    }
+
+    // Process list 2
+    const lines = rawList2.trim().split('\n');
+    for (let line of lines) {
+      line = line.trim();
+      if (!line || line.startsWith('Account Name')) continue;
+
+      const parts = line.split(/\t+|\s{2,}/);
+      let accountName = (parts[0] || '').trim();
+      let cityName = (parts[1] || '').trim();
+
+      if (!accountName) continue;
+
+      if (cityName === '..' || cityName === '.' || cityName === '-') {
+        cityName = '';
+      }
+      cityName = cityName.replace(/^["']|["']$/g, '').trim();
+
+      let fullName = accountName;
+      if (cityName && !fullName.toLowerCase().includes(cityName.toLowerCase())) {
+        fullName = `${fullName} - ${cityName}`;
+      }
+
+      map.set(fullName, { name: fullName, city: cityName });
+    }
+
+    const allCustomers = Array.from(map.values());
+    console.log(`Total unique customer records prepared: ${allCustomers.length}`);
+
+    const operations = allCustomers.map(c => ({
+      updateOne: {
+        filter: { name: c.name },
+        update: { $set: { name: c.name, city: c.city } },
+        upsert: true
+      }
+    }));
+
+    const result = await Customer.bulkWrite(operations);
+    console.log(`Bulk write finished! Upserted: ${result.upsertedCount}, Modified: ${result.modifiedCount}, Matched: ${result.matchedCount}`);
+
+    const count = await Customer.countDocuments();
+    console.log(`TOTAL CUSTOMERS IN DATABASE NOW: ${count}`);
+
+    process.exit(0);
+  } catch (err) {
+    console.error('Error seeding all customers:', err);
+    process.exit(1);
+  }
+}
+
+seedAll();

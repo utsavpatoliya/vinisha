@@ -1,0 +1,190 @@
+:root {
+  --sidebar-width: 250px;
+  --primary: #2b59ff;
+  --sidebar-bg: #171d3d;
+}
+
+body {
+  background-color: #f4f6fb;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.gujarati-text {
+  font-family: 'Noto Sans Gujarati', 'Inter', sans-serif;
+}
+
+/* ---------- Layout ---------- */
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+}
+
+.sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 8px;
+  font-size: 0.925rem;
+  padding: 0.6rem 0.85rem;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar .nav-link.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.topnav {
+  background: #fff;
+  border-bottom: 1px solid #e7e9f0;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Stat cards ---------- */
+.stat-card .card-body {
+  padding: 1.1rem 1.25rem;
+}
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+.stat-card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px);
+  transition: all 0.15s ease;
+}
+
+/* ---------- Login page ---------- */
+.login-body {
+  background: linear-gradient(135deg, #2b59ff 0%, #171d3d 100%);
+}
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+}
+
+/* ---------- Misc ---------- */
+.clickable-row {
+  cursor: pointer;
+}
+.card {
+  border-radius: 14px;
+}
+.table thead th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #6b7280;
+  border-bottom-width: 1px;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  z-index: 1050;
+  max-height: 220px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+.autocomplete-suggestions .suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.autocomplete-suggestions .suggestion-item:hover,
+.autocomplete-suggestions .suggestion-item.active {
+  background: #f0f3ff;
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 29, 61, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.product-row .autocomplete-suggestions {
+  min-width: 220px;
+}
+
+/* Custom Visible Scrollbar for Pagination */
+.pagination-scroll-container {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+.pagination-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+.pagination-scroll-container::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+.pagination-scroll-container::-webkit-scrollbar-thumb {
+  background: #2b59ff;
+  border-radius: 4px;
+}
+.pagination-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #171d3d;
+}
